@@ -1,7 +1,6 @@
 from redis import StrictRedis
 #配置常用工具
 class Config(object):
-    DEBUG = True
     #配置session加密串
     SECRET_KEY = "bGVlZWVlZWVlZWh1YW5hc2Rhc2Rhc2Rhc2Rhc2Rhc2QxMjMxMmFzZGE="
     #数据库配置
@@ -22,3 +21,25 @@ class Config(object):
     PERMANENT_SESSION_LIFETIME = 86400 * 2
     #配置redis
     SESSION_REDIS = StrictRedis(host=REDIS_HOST,port=REDIS_POST)
+
+class Development(Config):
+    '''开发环境'''
+    DEBUG = True
+
+
+class ReleseConfig(Config):
+    '''生产环境'''
+    DEBUG = False
+    #修改ip以及port 或者用户名
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/project1'  # 是否追踪数据库的修改
+
+class TestConfig(Config):
+    '''单元测试环境下配置'''
+    DEBUG = True
+    TESTING = True
+
+config = {
+    'development': Development,
+    'release': ReleseConfig,
+    'testconfig':TestConfig
+}
