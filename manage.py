@@ -7,32 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 #可以用来指定session保存位置
 from  flask_session import Session
 from flask_migrate import Migrate,MigrateCommand
-
-class Config(object):
-    DEBUG = True
-    #配置session加密串
-    SECRET_KEY = "bGVlZWVlZWVlZWh1YW5hc2Rhc2Rhc2Rhc2Rhc2Rhc2QxMjMxMmFzZGE="
-    #数据库配置
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/project1'  # 是否追踪数据库的修改
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    #Redis
-    REDIS_HOST = '127.0.0.1'
-    REDIS_POST = '6379'
-
-    #配置session
-    SESSION_TYPE = 'redis'
-    #开启session签名
-    SESSION_USE_SIGNER = True
-    #是否过期
-    SESSION_PERMANENT = False
-    #配置过期时间
-    PERMANENT_SESSION_LIFETIME = 86400 * 2
-    #配置redis
-    SESSION_REDIS = StrictRedis(host=REDIS_HOST,port=REDIS_POST)
-
-
-
+from config import Config
 
 
 app = Flask(__name__)
