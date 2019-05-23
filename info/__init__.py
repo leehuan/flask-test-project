@@ -9,9 +9,9 @@ from flask import  Flask
 from config import Config,config
 from flask_session import Session
 
-from info.modules.index import index_blu
 
 db = SQLAlchemy()
+redis_store = None #type: StrictRedis
 
 def setup_log(config_name):
     logging.basicConfig(level=config[config_name].LOG_LEVEL)
@@ -31,6 +31,7 @@ def configapp(config_name):
     #初始化数据库
     db.init_app(app)
     #初始化redis对象
+    global redis_store
     redis_store = StrictRedis(host=config[config_name].REDIS_HOST,port=config[config_name].REDIS_POST)
     #开启当前项目csrf保护
     CSRFProtect(app)
@@ -38,6 +39,7 @@ def configapp(config_name):
     Session(app)
 
     #注册蓝图
+    from info.modules.index import index_blu
     app.register_blueprint(index_blu)
     return app
 
