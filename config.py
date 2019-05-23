@@ -1,3 +1,5 @@
+import logging
+
 from redis import StrictRedis
 #配置常用工具
 class Config(object):
@@ -22,6 +24,9 @@ class Config(object):
     #配置redis
     SESSION_REDIS = StrictRedis(host=REDIS_HOST,port=REDIS_POST)
 
+    #设置日志等级
+    LOG_LEVEL =logging.DEBUG
+
 class Development(Config):
     '''开发环境'''
     DEBUG = True
@@ -32,6 +37,7 @@ class ReleseConfig(Config):
     DEBUG = False
     #修改ip以及port 或者用户名
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/project1'  # 是否追踪数据库的修改
+    LOG_LEVEL = logging.WARNING
 
 class TestConfig(Config):
     '''单元测试环境下配置'''

@@ -1,9 +1,13 @@
+import logging
+
 from flask_script import Manager
 from flask import session
 from flask_migrate import Migrate,MigrateCommand
 
-from info import app,db
+from info import configapp,db
 
+#修改开发环境，进行添加以及修改
+app = configapp('development')
 
 manager = Manager(app)
 #将app与db关联
@@ -13,7 +17,6 @@ manager.add_command('db',MigrateCommand)
 
 @app.route("/")
 def index():
-    session['name'] = 'test'
     return 'index3333'
 
 if __name__ == '__main__':
