@@ -9,6 +9,8 @@ from flask import  Flask
 from config import Config,config
 from flask_session import Session
 
+from info.modules.index import index_blu
+
 db = SQLAlchemy()
 
 def setup_log(config_name):
@@ -34,6 +36,9 @@ def configapp(config_name):
     CSRFProtect(app)
     #设置session保存指定位置
     Session(app)
+
+    #注册蓝图
+    app.register_blueprint(index_blu)
     return app
 
 
