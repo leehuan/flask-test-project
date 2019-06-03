@@ -4,7 +4,7 @@ from flask_script import Manager
 from flask import session
 from flask_migrate import Migrate,MigrateCommand
 
-from info import configapp,db
+from info import configapp,db,models
 
 #修改开发环境，进行添加以及修改
 app = configapp('development')
