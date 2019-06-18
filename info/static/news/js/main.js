@@ -143,7 +143,27 @@ $(function(){  //界面加载完成后执行
             return;
         }
 
+		var params = {
+		    "mobile":mobile,
+            "smscode":smscode,
+            "password":password
+        }
 
+		$.ajax({
+            url:"/passprot/register",
+            type:"post",
+            contentType: "application/json",
+            data:JSON.stringify(params),
+            success:function (resp) {
+                if(resp.errno == 0){
+
+                }else{
+                    alert(resp.errmsg)
+                    $("#register-password-err").html(resp.errmsg)
+                    $("#register-password-err").show()
+                }
+            }
+        })
 
     })
 })

@@ -12,7 +12,7 @@ from info.utils.captcha.captcha import captcha
 from info.libs.sms import CCP
 
 
-@passport_blu.route("/register", method=["POST"])
+@passport_blu.route("/register",methods=["POST"])
 def regist():
     #  获取参数
     # 检验参数
@@ -24,14 +24,16 @@ def regist():
 
 
     mobile = param_dice.get('mobile')
+    print(mobile)
     image_code = param_dice.get("smscode")
     password = param_dice.get("password")
-
+    print(mobile)
     if not all([mobile,image_code,password]):
         return jsonify(errno=RET.PARAMERR,errmsg="参数错误")
 
     try:
-        real_sms_code  = redis_store.get("SMS_"+mobile)
+        real_sms_code  = redis_store.get("SMS_" + mobile)
+        print(real_sms_code)
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg="查询失败")
@@ -48,6 +50,7 @@ def regist():
     user.nick_name = mobile
     #记录用户最后一次登录时间
     user.last_login  = datetime.now()
+    user.password = password
     #TODO  对密码做处理
 
     try:
@@ -124,7 +127,7 @@ def send_sms_code():
     if result != 0:
         return jsonify(errno=RET.THIRDERR, errmsg='发送短信失败')
     try:
-        redis_store.setex("SMS_" + mobile, sms_code_str, constants.SMS_CODE_REDIS_EXPIRES)
+        redis_store.set("SMS_" + mobile, sms_code_str, constants.SMS_CODE_REDIS_EXPIRES)
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.PARAMERR, errmsg='数据保存失败')
