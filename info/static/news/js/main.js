@@ -1,4 +1,4 @@
-$(function(){
+$(function(){  //界面加载完成后执行
 
 	// 打开登录框
 	$('.login_btn').click(function(){
@@ -143,7 +143,7 @@ $(function(){
             return;
         }
 
-        // 发起注册请求
+
 
     })
 })
@@ -152,6 +152,12 @@ var imageCodeId = ""
 
 // TODO 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
 function generateImageCode() {
+    imageCodeId = generateUUID();
+    var url = "/passprot/image_code?imageCodeId="+imageCodeId
+    //image 向地址发起请求，请求图片
+    $('.get_pic_code').attr("src",url)
+
+
 
 }
 
@@ -173,8 +179,37 @@ function sendSMSCode() {
         $(".get_code").attr("onclick", "sendSMSCode();");
         return;
     }
+    var parms = {
+        "mobile":mobile,
+        "image_code":imageCode,
+        "image_code_id":imageCodeId
+    }
 
-    // TODO 发送短信验证码
+      // 发起注册请求
+        $.ajax({
+            url:"/passprot/sms_code",
+            type:"post",
+            data:JSON.stringify(parms),
+            contentType:"application/json",
+            success:function (response) {
+                if (response.errno == "0"){
+                    var num = 60
+                    var t = setInterval(function () {
+                        if (num == 1){
+                            clearInterval(t)
+                            $(".get_code").html("点击获取验证码")
+                            $(".get_code").attr("onclick","sendSMSCode();")
+                        }else {
+                            num -= 1
+                            $(".get_code").html(num+"秒")
+                        }
+                    },1000)
+                }else {
+                    alert(response.errmsg)
+                     $(".get_code").attr("onclick","sendSMSCode();")
+                }
+            }
+        })
 }
 
 // 调用该函数模拟点击左侧按钮
