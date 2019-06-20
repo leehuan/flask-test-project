@@ -156,7 +156,7 @@ $(function(){  //界面加载完成后执行
             data:JSON.stringify(params),
             success:function (resp) {
                 if(resp.errno == 0){
-
+                    location.reload()
                 }else{
                     alert(resp.errmsg)
                     $("#register-password-err").html(resp.errmsg)

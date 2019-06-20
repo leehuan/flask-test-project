@@ -50,8 +50,8 @@ def regist():
     user.nick_name = mobile
     #记录用户最后一次登录时间
     user.last_login  = datetime.now()
-    user.password = password
     #TODO  对密码做处理
+    user.password = password
 
     try:
         db.session.add(user)
