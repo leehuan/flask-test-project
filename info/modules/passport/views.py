@@ -12,6 +12,36 @@ from info.utils.captcha.captcha import captcha
 from info.libs.sms import CCP
 
 
+@passport_blu.route("/login",methods=["POST"])
+def login():
+    param_dice = request.json
+
+    mobile = param_dice.get('mobile')
+    passprot = param_dice.get('passport')
+
+    if not all([mobile,passprot]):
+        return jsonify(errno=RET.PARAMERR, errmsg="参数错误")
+
+    if not re.match('1[35678]\\d{9}', mobile):
+        return jsonify(errno=RET.PARAMERR, errmsg='手机号格式不正确')
+
+    try:
+        user = User.query.filter(User.mobile == mobile)
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DBERR, errmsg="数据查询错误")
+    if not user:
+        return jsonify(errno=RET.NODATA, errmsg="用户不存在")
+
+    if not User.check_password(passprot):
+        return jsonify(errno=RET.PARAMERR, errmsg="密码错误")
+
+    session["user_id"] = user.id
+    session["mobile"] = user.mobile
+    session["nick_name"] = user.nick_name
+
+    return jsonify(errno=RET.OK, errmsg="登录成功")
+
 @passport_blu.route("/register",methods=["POST"])
 def regist():
     #  获取参数
