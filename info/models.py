@@ -60,11 +60,11 @@ class User(BaseModel, db.Model):
         raise AttributeError("当前属性允许获取")
 
     @password.setter
-    def password(self,value):
+    def password(self, value):
         self.password_hash = generate_password_hash(value)
 
-    def check_password(self,password):
-        return check_password_hash(self.password_hash,password)
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 

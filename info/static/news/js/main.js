@@ -95,6 +95,7 @@ $(function(){  //界面加载完成后执行
 
     // TODO 登录表单提交
     $(".login_form_con").submit(function (e) {
+            // 阻止默认提交操作
         e.preventDefault()
         var mobile = $(".login_form #mobile").val()
         var password = $(".login_form #password").val()
@@ -110,6 +111,27 @@ $(function(){  //界面加载完成后执行
         }
 
         // 发起登录请求
+        var params = {
+            "mobile":mobile,
+            "passport":password
+        }
+
+        $.ajax({
+            url:"/passprot/login",
+            type:"post",
+            contentType:"application/json",
+            data:JSON.stringify(params),
+            success:function (resp) {
+               if(resp.errno == 0){
+                   location.reload()
+               }else{
+                   $("#error_tip").html(resp.errmsg)
+                   $("#error_tip").show()
+               }
+            }
+        })
+
+
     })
 
 
@@ -158,7 +180,6 @@ $(function(){  //界面加载完成后执行
                 if(resp.errno == 0){
                     location.reload()
                 }else{
-                    alert(resp.errmsg)
                     $("#register-password-err").html(resp.errmsg)
                     $("#register-password-err").show()
                 }

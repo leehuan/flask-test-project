@@ -26,14 +26,14 @@ def login():
         return jsonify(errno=RET.PARAMERR, errmsg='手机号格式不正确')
 
     try:
-        user = User.query.filter(User.mobile == mobile)
+        user = User.query.filter(User.mobile == mobile).first()
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg="数据查询错误")
     if not user:
         return jsonify(errno=RET.NODATA, errmsg="用户不存在")
 
-    if not User.check_password(passprot):
+    if not user.check_password(passprot):
         return jsonify(errno=RET.PARAMERR, errmsg="密码错误")
 
     session["user_id"] = user.id
@@ -41,6 +41,9 @@ def login():
     session["nick_name"] = user.nick_name
 
     return jsonify(errno=RET.OK, errmsg="登录成功")
+
+
+
 
 @passport_blu.route("/register",methods=["POST"])
 def regist():
