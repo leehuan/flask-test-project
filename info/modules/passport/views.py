@@ -12,6 +12,14 @@ from info.utils.captcha.captcha import captcha
 from info.libs.sms import CCP
 
 
+@passport_blu.route("/logout")
+def logout():
+    session.pop("user_id",None)
+    session.pop("mobile", None)
+    session.pop("nick_name", None)
+
+    return jsonify(errno=RET.OK, errmsg="参数错误")
+
 @passport_blu.route("/login",methods=["POST"])
 def login():
     param_dice = request.json

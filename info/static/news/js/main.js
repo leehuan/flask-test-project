@@ -197,9 +197,12 @@ function generateImageCode() {
     var url = "/passprot/image_code?imageCodeId="+imageCodeId
     //image 向地址发起请求，请求图片
     $('.get_pic_code').attr("src",url)
+}
 
-
-
+function logout() {
+    $.get('/passprot/logout',function (reso) {
+        location.reload()
+    })
 }
 
 // 发送短信验证码
