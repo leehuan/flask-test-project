@@ -120,6 +120,9 @@ $(function(){  //界面加载完成后执行
             url:"/passprot/login",
             type:"post",
             contentType:"application/json",
+            headers:{
+                "X-CSRFToken":getCookie('csrf_token')
+            },
             data:JSON.stringify(params),
             success:function (resp) {
                if(resp.errno == 0){
@@ -175,6 +178,9 @@ $(function(){  //界面加载完成后执行
             url:"/passprot/register",
             type:"post",
             contentType: "application/json",
+            headers:{
+                "X-CSRFToken":getCookie('csrf_token')
+            },
             data:JSON.stringify(params),
             success:function (resp) {
                 if(resp.errno == 0){
@@ -234,6 +240,9 @@ function sendSMSCode() {
             url:"/passprot/sms_code",
             type:"post",
             data:JSON.stringify(parms),
+            headers:{
+                "X-CSRFToken":getCookie('csrf_token')
+            },
             contentType:"application/json",
             success:function (response) {
                 if (response.errno == "0"){

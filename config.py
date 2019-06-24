@@ -8,6 +8,8 @@ class Config(object):
     #数据库配置
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/project1'  # 是否追踪数据库的修改
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    #在请求结束时，如果指定指定此配置True
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
     #Redis
     REDIS_HOST = '127.0.0.1'

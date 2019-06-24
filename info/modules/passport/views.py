@@ -36,6 +36,7 @@ def login():
     try:
         user = User.query.filter(User.mobile == mobile).first()
     except Exception as e:
+        db.session.rollback()
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg="数据查询错误")
     if not user:
@@ -47,6 +48,15 @@ def login():
     session["user_id"] = user.id
     session["mobile"] = user.mobile
     session["nick_name"] = user.nick_name
+
+    #设置最后一次登录时间
+    user.last_login = datetime.now()
+    # try:
+    #     db.session.commit()
+    # except Exception as e:
+    #     db.session.rollback()
+    #     current_app.logger.error(e)
+    #     return jsonify(errno=RET.DBERR, errmsg="数据查询错误")
 
     return jsonify(errno=RET.OK, errmsg="登录成功")
 
