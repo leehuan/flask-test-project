@@ -1,4 +1,5 @@
 import logging
+from json import JSONEncoder
 from logging.handlers import RotatingFileHandler
 
 from flask import Flask
