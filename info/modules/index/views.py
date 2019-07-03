@@ -1,6 +1,6 @@
 from flask import render_template, current_app, request, session, jsonify
 
-from info.models import User, News
+from info.models import User, News, Category
 from info.utils.response_code import RET
 from . import index_blu
 from info import redis_store, constants
@@ -12,6 +12,8 @@ def news_list():
     page = request.args.get("page", "1")
     per_page = request.args.get("per_page", "10")
 
+    print("hahahahahah")
+
     #校验参数
     try:
         cid = int(cid)
@@ -22,9 +24,11 @@ def news_list():
         return  jsonify(errno=RET.PARAMERR,errmsg="参数错误")
 
     filters = []
+    print(cid)
+    print(cid!="1")
     #查询数据
-    if cid!=1:
-        filters = filters.append(News.category_id == cid )
+    if cid!="1":
+        filters.append(News.category_id == cid )
     try:
         paginate = News.query.filter(*filters).order_by(News.create_time.desc()).paginate(page,per_page,False)
     except Exception as e:
@@ -47,6 +51,10 @@ def news_list():
     print(data)
 
     return jsonify(errno=RET.OK, errmsg="OK",data=data)
+
+
+
+
 
 
 @index_blu.route("/")
@@ -72,14 +80,19 @@ def index():
     for news in news_list:
         news_dict_li.append(news.to_basic_dict())
 
+    categories = Category.query.all()
+
+    category_list = []
+
+    for categroy in categories:
+        category_list.append(categroy.to_dict())
 
 
     data = {
         "user":user.to_dict() if user  else  None,
         "news_right_list":news_dict_li,
+        "category_li":category_list
     }
-
-
 
     return render_template('news/index.html',data=data)
 
