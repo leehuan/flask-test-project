@@ -1,6 +1,7 @@
-from flask import render_template, current_app, request, session, jsonify
+from flask import render_template, current_app, request, session, jsonify, g
 
 from info.models import User, News, Category
+from info.utils.captcha.common import user_login_data
 from info.utils.response_code import RET
 from . import index_blu
 from info import redis_store, constants
@@ -12,7 +13,6 @@ def news_list():
     page = request.args.get("page", "1")
     per_page = request.args.get("per_page", "10")
 
-    print("hahahahahah")
 
     #校验参数
     try:
@@ -58,15 +58,10 @@ def news_list():
 
 
 @index_blu.route("/")
+@user_login_data
 def index():
 
-    user_id = session.get('user_id',None)
-    user = None
-    if user_id:
-        try:
-            user = User.query.get(user_id)
-        except Exception as e:
-            current_app.logger.error(e)
+    user = g.user
 
     news_list = []
      #右侧新闻排行的逻辑

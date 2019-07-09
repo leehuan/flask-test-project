@@ -125,6 +125,7 @@ $(function(){  //界面加载完成后执行
             },
             data:JSON.stringify(params),
             success:function (resp) {
+                alert("0")
                if(resp.errno == 0){
                    location.reload()
                }else{
