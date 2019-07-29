@@ -1,11 +1,56 @@
 from flask import render_template, jsonify, current_app, session, g, abort, request
 
-from info import constants
-from info.models import News, User
+from info import constants, db
+from info.models import News, User, Comment
 from info.utils.captcha.common import user_login_data
 
 from info.utils.response_code import RET
 from . import news_blu
+
+
+@news_blu.route('/news_comment',methods=["POST"])
+@user_login_data
+def comment_news():
+    user = g.user
+
+    if not user:
+        return jsonify(errno=RET.SESSIONERR, errmsg="请登录")
+
+    news_id = request.json.get('news_id')
+    print(news_id)
+    comment_content = request.json.get('comment')
+    parent_id = request.json.get('parent_id')
+
+    if not all([news_id,comment_content]):
+        return  jsonify(errno=RET.PARAMERR,errmsg='参数错误')
+
+    try:
+        news_id = int(news_id)
+        if parent_id:
+            parent_id = int(parent_id)
+    except Exception as e:
+        return jsonify(errno=RET.PARAMERR, errmsg='参数错误')
+
+    comment = Comment()
+    comment.user_id = user.id
+    comment.news_id = news_id
+    comment.content = comment_content
+
+    if parent_id:
+        comment.parent_id = parent_id
+    try:
+        db.session.add(comment)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+
+    return jsonify(errno=RET.OK, errmsg='OK',data = comment.to_dict())
+
+
+
+
+
+
 
 @news_blu.route('/<int:news_id>')
 @user_login_data
